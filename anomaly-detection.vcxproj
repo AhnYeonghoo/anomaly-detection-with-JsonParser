@@ -134,7 +134,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code2_3.cpp" />
+    <ClCompile Include="code2_4.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="processing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

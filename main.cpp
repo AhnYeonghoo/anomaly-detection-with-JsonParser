@@ -9,22 +9,47 @@
 #pragma comment(lib, "lib_json.lib")
 
 
+void loadFolderImages(std::string path)
+{
+	std::vector<std::string> str;
+	cv::glob(path, str, false);
+	
+	std::cout << "로드 개수: " << str.size() << std::endl;
+}
+
+Json::Value loadJson(std::string path)
+{
+	Json::Value value;
+	Json::CharReaderBuilder reader;
+	std::ifstream is(path, std::ifstream::binary);
+	
+	JSONCPP_STRING err;
+	const auto bret = Json::parseFromStream(reader, is, &value, &err);
+
+	return value;
+}
+
+cv::Mat loadImage(std::string path, int color_or_gray = cv::IMREAD_GRAYSCALE)
+{
+	cv::Mat image = cv::imread(path, color_or_gray);
+
+	if (image.empty())
+	{
+		std::cout << "Not found image" << std::endl;
+	}
+	return image;
+}
+
 int main()
 {
 	std::string path = "C:\\images\\sample-09R\\*.jpg";
-	std::vector<std::string> str;
+	loadFolderImages(path);
+	
 	int index = 0;
-	cv::glob(path, str, false);
-	std::cout << "로드 개수:  " << str.size() << std::endl;
 
-	Json::Value value; // Json 객체 저장할 변수
-	Json::CharReaderBuilder reader; // Json 읽어들이는 변수
-	std::ifstream is("./images/result/_IMG09R-B_raw.json", std::ifstream::binary); 
-	JSONCPP_STRING errs;
-	const auto bret = Json::parseFromStream(reader, is, &value, &errs);
+	const auto value = loadJson("./images/result/_IMG09R-B_raw.json");
+	cv::Mat image = loadImage("./images/sample-09R/_IMG09R-B_raw.jpg", cv::IMREAD_GRAYSCALE);
 
-	cv::Mat image = cv::imread("./images/sample-09R/_IMG09R-B_raw.jpg", cv::IMREAD_GRAYSCALE);
-	if (image.empty()) std::cout << "Not found image" << std::endl;
 	cv::Mat img_rectangle;
 	image.copyTo(img_rectangle);
 	std::cout << value["shapes"][0]["points"][0][0].asDouble() << std::endl;
